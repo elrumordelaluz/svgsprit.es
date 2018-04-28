@@ -1,0 +1,108 @@
+.wrapper {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.loading {
+  opacity: 0.5;
+}
+
+.wrapper__active {
+  background-color: #78c2d3;
+}
+.wrapper__reject {
+  background-color: #e03756;
+}
+
+.logo {
+  width: 100%;
+  height: 100%;
+}
+
+.message {
+  position: absolute;
+  text-align: center;
+  top: 0;
+  left: 50%;
+  color: #414242;
+  font-size: 0.85em;
+  font-family: var(--code-font);
+  width: 70vw;
+  border: 0;
+  background: transparent;
+  height: 70px;
+  padding: 1em;
+  outline: 0;
+  transform: translateX(-50%);
+}
+
+.output {
+  height: 30vh;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  transform: translateY(100%);
+  font-family: var(--code-font);
+  background-color: rgba(255, 255, 255, 0.9);
+  transition: 0.3s;
+  z-index: 10;
+  overflow: hidden;
+}
+
+.code {
+  height: 100%;
+  tab-size: 4;
+  overflow: auto;
+  line-height: 1.5;
+  color: #414242;
+  margin: 0;
+}
+
+.code code {
+  white-space: pre-wrap;
+}
+
+.show {
+  transform: translateY(0);
+  padding: 35px 30px 20px;
+  border-top: 1px solid #f5f5f7;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+}
+
+.controls {
+  display: flex;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.button {
+  border: 0;
+  background: none;
+  cursor: pointer;
+  outline: 0;
+}
+
+.github_logo {
+  width: 25px;
+  height: 25px;
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  z-index: 20;
+}
+
+.error {
+  position: absolute;
+  top: 7px;
+  text-align: center;
+  font-size: 0.7em;
+  right: 0;
+  left: 0;
+  color: #e03756;
+}

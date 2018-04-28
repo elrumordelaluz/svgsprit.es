@@ -1,0 +1,20 @@
+{
+  "name": "app",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "axios": "0.18.0",
+    "clipboard": "2.0.0",
+    "qs": "6.5.1",
+    "react": "^16.3.2",
+    "react-dom": "^16.3.2",
+    "react-dropzone": "4.2.9",
+    "react-scripts": "1.1.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}

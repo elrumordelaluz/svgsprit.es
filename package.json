@@ -1,0 +1,29 @@
+{
+  "name": "micro-svg-spreact",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/elrumordelaluz/micro-svg-spreact.git",
+  "author":
+    "Lionel T <elrumordelaluz@hotmail.com> (https://elrumordelaluz.com/)",
+  "license": "MIT",
+  "dependencies": {
+    "micro": "9.3.0",
+    "micro-cors": "0.1.0",
+    "svg-spreact": "1.2.0",
+    "urlencoded-body-parser": "2.0.1"
+  },
+  "devDependencies": {
+    "micro-dev": "2.2.2"
+  },
+  "engines": {
+    "node": "^8"
+  },
+  "scripts": {
+    "start": "micro",
+    "dev": "micro-dev --ignore=/app"
+  },
+  "now": {
+    "alias": "https://micro-svg-spreact.now.sh/",
+    "files": ["index.js"]
+  }
+}
