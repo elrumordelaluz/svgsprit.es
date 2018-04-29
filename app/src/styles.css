@@ -22,20 +22,24 @@
   height: 100%;
 }
 
+.message,
+.settings {
+  color: #414242;
+  font-size: 0.85em;
+  font-family: var(--code-font);
+}
+
 .message {
   position: absolute;
   text-align: center;
   top: 0;
   left: 50%;
-  color: #414242;
-  font-size: 0.85em;
-  font-family: var(--code-font);
   width: 70vw;
   border: 0;
   background: transparent;
   height: 70px;
-  padding: 1em;
   outline: 0;
+  padding: 1em;
   transform: translateX(-50%);
 }
 
@@ -105,4 +109,11 @@
   right: 0;
   left: 0;
   color: #e03756;
+}
+
+.settings {
+  position: fixed;
+  z-index: 21;
+  padding: 0 1em;
+  user-select: none;
 }

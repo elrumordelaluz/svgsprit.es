@@ -3,6 +3,7 @@ import Dropzone from 'react-dropzone'
 import axios from 'axios'
 import qs from 'qs'
 import './styles.css'
+import githubLogo from './github.svg'
 import Clipboard from 'clipboard'
 
 const url =
@@ -13,7 +14,14 @@ const url =
 const initialFileName = 'svg'
 
 class App extends Component {
-  state = { output: null, loading: false, copied: false, error: false }
+  state = {
+    output: null,
+    loading: false,
+    copied: false,
+    error: false,
+    optimize: true,
+    tidy: true,
+  }
 
   componentDidMount() {
     this.clipboard = new Clipboard('.copyButton')
@@ -26,7 +34,7 @@ class App extends Component {
 
   onDrop = files => {
     let svgs = []
-    let names = files.map(file => file.name.replace('.svg', ''))
+    const names = files.map(file => file.name.replace('.svg', ''))
     for (let i = 0; i < files.length; i++) {
       const file = files[i]
       const reader = new FileReader()
@@ -34,15 +42,16 @@ class App extends Component {
       reader.onload = ({ target }) => {
         svgs.push(target.result)
         if (i === files.length - 1) {
-          this.processInput(svgs.join())
+          this.processInput(svgs.join(), names)
         }
       }
     }
   }
 
-  processInput = input => {
+  processInput = (input, names) => {
+    const { optimize, tidy } = this.state
     this.setState({ loading: true, copied: false, error: false })
-    const data = qs.stringify({ input })
+    const data = qs.stringify({ input, tidy, optimize, names })
     axios({
       url,
       method: 'post',
@@ -58,18 +67,19 @@ class App extends Component {
       })
   }
 
-  // inputChange = e => {
-  //   const val = this.pasteInput.value.trim()
-  //
-  //   if (val.includes('</svg>')) {
-  //     this.pasteInput.value = ''
-  //     this.outputName = initialFileName
-  //     this.pasteInput.blur()
-  //     this.processInput(val)
-  //   }
-  // }
-
   resetOutput = () => this.setState({ output: null, copied: false })
+
+  handleOptimized = () => {
+    this.setState(prevState => ({
+      optimize: !prevState.optimize,
+    }))
+  }
+
+  handleTidy = () => {
+    this.setState(prevState => ({
+      tidy: !prevState.tidy,
+    }))
+  }
 
   download = () => {
     const { output, loading, error } = this.state
@@ -88,7 +98,7 @@ class App extends Component {
   }
 
   render() {
-    const { output, loading, copied, error } = this.state
+    const { output, loading, copied, error, optimize, tidy } = this.state
     return (
       <Fragment>
         <Dropzone
@@ -100,12 +110,7 @@ class App extends Component {
           className={`wrapper ${loading ? 'loading' : ''}`}
           activeClassName="wrapper__active"
           rejectClassName="wrapper__reject">
-          <input
-            ref={input => (this.pasteInput = input)}
-            disabled={loading}
-            className="message"
-            placeholder="Drop the svg files"
-          />
+          <p className="message">Drop SVG files to create the Sprite</p>
           {error && (
             <span className="error">
               An error was verified during your last svg processed
@@ -140,6 +145,26 @@ class App extends Component {
             </code>
           </pre>
         </div>
+        <a
+          key="github"
+          href="https://github.com/elrumordelaluz/micro-svg-spreact"
+          className="github">
+          <img src={githubLogo} className="github_logo" alt="github logo" />
+        </a>
+        <p className="settings">
+          <label>
+            tidy{' '}
+            <input type="checkbox" checked={tidy} onChange={this.handleTidy} />
+          </label>
+          <label>
+            optimize{' '}
+            <input
+              type="checkbox"
+              checked={optimize}
+              onChange={this.handleOptimized}
+            />
+          </label>
+        </p>
       </Fragment>
     )
   }
