@@ -5,6 +5,7 @@
   "dependencies": {
     "axios": "0.18.0",
     "clipboard": "2.0.0",
+    "gh-pages": "1.1.0",
     "qs": "6.5.1",
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
@@ -12,9 +13,12 @@
     "react-scripts": "1.1.4"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
-  }
+  },
+  "homepage": "https://elrumordelaluz.github.io/micro-svg-spreact"
 }
