@@ -20,9 +20,7 @@ const template = ({ defs, refs, style }) => `
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta charset="UTF-8" />
     <style>
-      html {
-        box-sizing: border-box;
-      }
+      html { box-sizing: border-box }
       body {
         margin: 0;
         padding: 0;
@@ -30,12 +28,13 @@ const template = ({ defs, refs, style }) => `
           "Oxygen","Ubuntu","Cantarell","Fira Sans",
           "Droid Sans","Helvetical Neue",sans-serif;
         font-size: 1.125rem;
-        text-align: center;
+        text-align: center
       }
-      h1 {
+      h1{
         font-weight: 100;
-        margin-bottom: 1em;
+        margin-bottom: 1em
       }
+      small { font-size: .34em }
       ${style}
     </style>
   </head>
@@ -43,14 +42,21 @@ const template = ({ defs, refs, style }) => `
   <body>
     <!-- SVG Sprite -->
     ${defs}
-    <h1>SVG Sprite Demo</h1>
+    <h1>
+      SVG Sprite Demo
+      <br/>
+      <small>
+        created with <a href="https://elrumordelaluz.github.io/micro-svg-spreact/">svg-spreact</a>
+      </small>
+    </h1>
     ${refs}
   </body>
 `
 
 const penSettings = {
-  title: 'SVG Sprite',
-  description: 'Created with svg-spreact',
+  title: 'SVG Spreact',
+  description:
+    'SVG Sprite created with svg-spreact (https://elrumordelaluz.github.io/micro-svg-spreact/)',
   tags: ['svg', 'svg-sprite', 'svgson', 'svg-spreact'],
   editors: '1100',
 }
