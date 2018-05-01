@@ -8,6 +8,8 @@
 
 .loading {
   opacity: 0.5;
+  user-select: none;
+  pointer-events: none;
 }
 
 .wrapper__active {

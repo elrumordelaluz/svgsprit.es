@@ -180,7 +180,6 @@ ${refs}`,
   render() {
     const { output, loading, copied, error, optimize, tidy } = this.state
     const penValue = output && !loading && !error ? this.prefillPen() : ''
-
     return (
       <Fragment>
         <Dropzone
@@ -254,7 +253,7 @@ ${refs}`,
           className="github">
           <img src={githubLogo} className="github_logo" alt="github logo" />
         </a>
-        <p className="settings">
+        <p className={`settings${loading ? ' loading' : ''}`}>
           <label>
             tidy{' '}
             <input type="checkbox" checked={tidy} onChange={this.handleTidy} />
