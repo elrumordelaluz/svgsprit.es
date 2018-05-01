@@ -4,7 +4,7 @@ const svgSpreact = require('svg-spreact')
 const parse = require('urlencoded-body-parser')
 
 const handler = async (req, res) => {
-  const { input, names, tidy, optimize } = await parse(req)
+  const { input, names, tidy, optimize, className } = await parse(req)
 
   if (input) {
     try {
@@ -12,6 +12,7 @@ const handler = async (req, res) => {
         ...(tidy ? { tidy: tidy === 'false' ? false : true } : {}),
         ...(optimize ? { optimize: optimize === 'false' ? false : true } : {}),
         ...(names ? { processId: n => names[n] || `Icon_${n}` } : {}),
+        ...(className ? { className } : {}),
       })
     } catch (err) {
       return send(res, 400, `Error: ${err}`)
