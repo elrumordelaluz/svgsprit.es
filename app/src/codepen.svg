@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" aria-labelledby="title"
+aria-describedby="desc" role="img" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <title>Codepen</title>
+  <desc>A solid styled icon from Orion Icon Library.</desc>
+  <path data-name="layer1"
+  d="M33.8.812a5.144 5.144 0 0 0-5.7.1L2.7 18.6a4.9 4.9 0 0 0-2.2 4.1v19.088a5.039 5.039 0 0 0 2.3 4.2l25.9 17.19a5.167 5.167 0 0 0 5.6 0l26.4-17.39a5.039 5.039 0 0 0 2.3-4.2V22.8a5.039 5.039 0 0 0-2.3-4.2zM53.5 21.5L43.8 28l-9.2-6.6V8.308zM28 8.408V21.2l-9.4 6.5-9.3-6.3zM6.7 27.7l6 4.1-6 4.2zm21.4 27.28L9.3 42.388l9.4-6.6 9.4 6.3zm-3.6-23.286l6.1-4.3 7.1 4.7-6.3 4.2zM34.8 54.98V42.088l9-6 9.7 6.4zm21.4-18.789l-6.4-4.2 6.4-4.3z"
+  fill="#202020"></path>
+</svg>

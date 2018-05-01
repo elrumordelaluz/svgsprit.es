@@ -68,6 +68,12 @@
 
 .code code {
   white-space: pre-wrap;
+  display: block;
+  margin-bottom: 1em;
+  font-size: 0.85em;
+  padding: 1em;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .show {
@@ -101,6 +107,23 @@
   z-index: 20;
 }
 
+.codepen_btn {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  width: 15px;
+  display: inline-block;
+  vertical-align: middle;
+  height: 15px;
+  cursor: pointer;
+  margin: 0 0.5em;
+}
+
+.codepen_form {
+  display: inline-block;
+  vertical-align: middle;
+}
+
 .error {
   position: absolute;
   top: 7px;
@@ -116,4 +139,33 @@
   z-index: 21;
   padding: 0 1em;
   user-select: none;
+  display: flex;
+  flex-direction: column;
+  font-family: monospace;
+}
+
+.settings > * {
+  margin-bottom: 0.5em;
+}
+
+:root {
+  --o: 0.2;
+}
+
+.settings input[type='text'],
+.settings textarea {
+  border: 0;
+  display: inline-block;
+  vertical-align: top;
+  font-family: monospace;
+  border-left: 3px solid rgba(255, 0, 255, var(--o));
+  padding-left: 1em;
+  outline: 0;
+  margin-left: 1em;
+  transition: 0.3s;
+}
+
+.settings input[type='text']:focus,
+.settings textarea:focus {
+  --o: 1;
 }

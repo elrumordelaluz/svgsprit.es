@@ -1,9 +1,10 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component, Fragment, createRef } from 'react'
 import Dropzone from 'react-dropzone'
 import axios from 'axios'
 import qs from 'qs'
 import './styles.css'
 import githubLogo from './github.svg'
+import codepenLogo from './codepen.svg'
 import Clipboard from 'clipboard'
 
 const url =
@@ -11,7 +12,48 @@ const url =
     ? 'http://localhost:3000'
     : 'https://micro-svg-spreact.now.sh/'
 
-const initialFileName = 'svg'
+const template = ({ defs, refs, style }) => `
+  <!doctype>
+  <html lang="en">
+  <head>
+    <title>SVG Sprite</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8" />
+    <style>
+      html {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: -apple-system,BlinkMacSystemFont,"Segoe UI","Roboto",
+          "Oxygen","Ubuntu","Cantarell","Fira Sans",
+          "Droid Sans","Helvetical Neue",sans-serif;
+        font-size: 1.125rem;
+        text-align: center;
+      }
+      h1 {
+        font-weight: 100;
+        margin-bottom: 1em;
+      }
+      ${style}
+    </style>
+  </head>
+    
+  <body>
+    <!-- SVG Sprite -->
+    ${defs}
+    <h1>SVG Sprite Demo</h1>
+    ${refs}
+  </body>
+`
+
+const penSettings = {
+  title: 'SVG Sprite',
+  description: 'Created with svg-spreact',
+  tags: ['svg', 'svg-sprite', 'svgson', 'svg-spreact'],
+  editors: '1100',
+}
 
 class App extends Component {
   state = {
@@ -23,13 +65,15 @@ class App extends Component {
     tidy: true,
   }
 
+  cname = createRef()
+  style = createRef()
+
   componentDidMount() {
     this.clipboard = new Clipboard('.copyButton')
     this.clipboard.on('success', e => {
       this.setState({ copied: true })
       e.clearSelection()
     })
-    this.outputName = initialFileName
   }
 
   onDrop = files => {
@@ -51,7 +95,13 @@ class App extends Component {
   processInput = (input, names) => {
     const { optimize, tidy } = this.state
     this.setState({ loading: true, copied: false, error: false })
-    const data = qs.stringify({ input, tidy, optimize, names })
+    const data = qs.stringify({
+      input,
+      tidy,
+      optimize,
+      names,
+      className: this.cname.current.value,
+    })
     axios({
       url,
       method: 'post',
@@ -81,24 +131,56 @@ class App extends Component {
     }))
   }
 
-  download = () => {
+  downloadDemo = () => {
     const { output, loading, error } = this.state
     if (output && !loading && !error) {
       const element = document.createElement('a')
-      const file = new Blob([output], {
-        type: 'image/svg+xml',
+      const { refs, defs } = output
+      const html = template({ defs, refs, style: this.style.current.value })
+      const file = new Blob([html], {
+        type: 'text/html',
       })
       const fileURL = URL.createObjectURL(file)
       element.href = fileURL
-      element.download = `${this.outputName}__outlined.svg`
+      element.download = `demo.html`
       element.click()
-      // window.open(fileURL)
       window.URL.revokeObjectURL(fileURL)
     }
   }
 
+  downloadSprite = () => {
+    const { output, loading, error } = this.state
+    if (output && !loading && !error) {
+      const element = document.createElement('a')
+      const { defs } = output
+      const file = new Blob([defs], {
+        type: 'image/svg+xml',
+      })
+      const fileURL = URL.createObjectURL(file)
+      element.href = fileURL
+      element.download = `sprite.svg`
+      element.click()
+      window.URL.revokeObjectURL(fileURL)
+    }
+  }
+
+  prefillPen = () => {
+    const { output: { defs, refs } } = this.state
+    return JSON.stringify({
+      ...penSettings,
+      html: `<!-- SVG Sprite -->
+${defs}
+<!-- SVG References -->
+${refs}`,
+      css: this.style.current.value,
+      css_starter: 'normalize',
+    })
+  }
+
   render() {
     const { output, loading, copied, error, optimize, tidy } = this.state
+    const penValue = output && !loading && !error ? this.prefillPen() : ''
+
     return (
       <Fragment>
         <Dropzone
@@ -129,20 +211,41 @@ class App extends Component {
             <div className="controls">
               <button
                 className="button copyButton"
-                data-clipboard-target="#foo">
-                {copied ? 'Copied' : 'Copy'}
+                data-clipboard-target="#defs">
+                {copied ? 'Sprite Copied' : 'Copy Sprite'}
               </button>
-              <button className="button" onClick={this.download}>
-                Download
+              <button
+                className="button copyButton"
+                data-clipboard-target="#refs">
+                {copied ? 'Refs Copied' : 'Copy Refs'}
               </button>
+              <button className="button" onClick={this.downloadDemo}>
+                Download Demo
+              </button>
+              <button className="button" onClick={this.downloadSprite}>
+                Download Sprite
+              </button>
+
+              <form
+                action="https://codepen.io/pen/define"
+                method="POST"
+                target="_blank"
+                className="codepen_form">
+                <input type="hidden" name="data" value={penValue} />
+                <button className="codepen_btn">
+                  <img
+                    src={codepenLogo}
+                    className="codepen_logo"
+                    alt="codepen logo"
+                  />
+                </button>
+              </form>
               <button className="button" onClick={this.resetOutput}>
                 ✕
               </button>
             </div>
-            <code id="foo">
-              {output && output.defs}
-              {output && output.refs}
-            </code>
+            <code id="defs">{output && output.defs}</code>
+            <code id="refs">{output && output.refs}</code>
           </pre>
         </div>
         <a
@@ -162,6 +265,21 @@ class App extends Component {
               type="checkbox"
               checked={optimize}
               onChange={this.handleOptimized}
+            />
+          </label>
+          <label>
+            class <input ref={this.cname} type="text" defaultValue="icon" />
+          </label>
+          <label>
+            style{' '}
+            <textarea
+              ref={this.style}
+              rows="5"
+              defaultValue={`.icon { 
+  width: 50px; 
+  height: 50px;
+  margin: .5em;
+}`}
             />
           </label>
         </p>
