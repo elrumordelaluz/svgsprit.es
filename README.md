@@ -6,12 +6,12 @@
   Public endpoint to process generate <code>SVG</code> Sprites using <a href="https://github.com/elrumordelaluz/svg-spreact">svg-spreact</a>
 </p>
 
-## GUI
-
-https://elrumordelaluz.github.io/micro-svg-spreact/
-
 <p align="center">
   <img alt="SVG Spreact demo" title="SVG Spreact demo" src="https://cdn.rawgit.com/elrumordelaluz/micro-svg-spreact/fc53c585/demo.gif" width="450">
+</p>
+
+<p align="center">  
+  https://elrumordelaluz.github.io/micro-svg-spreact/
 </p>
 
 ## Endpoint
