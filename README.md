@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  Public endpoint to process generate <code>SVG</code> Sprites using <a href="https://github.com/elrumordelaluz/svg-spreact">svg-spreact</a>
+  Public endpoint to generate <code>SVG</code> Sprites using <a href="https://github.com/elrumordelaluz/svg-spreact">svg-spreact</a>
 </p>
 
 <p align="center">
