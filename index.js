@@ -18,7 +18,11 @@ const handler = async (req, res) => {
       return send(res, 400, `Error: ${err}`)
     }
   } else {
-    return send(res, 400, '"input" field is required')
+    return send(
+      res,
+      200,
+      '<p style="display:flex;align-items:center;justify-content:center;height:100vh;"><a style="text-decoration:none;color:inherit;font-family:sans-serif;" href="https://elrumordelaluz.github.io/micro-svg-spreact/">visit svg-spreact</a></p>'
+    )
   }
 }
 
