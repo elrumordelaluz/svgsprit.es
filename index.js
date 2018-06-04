@@ -1,11 +1,9 @@
 const { send, json } = require('micro')
 const cors = require('micro-cors')()
 const svgSpreact = require('svg-spreact')
-const parse = require('urlencoded-body-parser')
 
 const handler = async (req, res) => {
-  const { input, names, tidy, optimize, className } = await parse(req)
-
+  const { input, names, tidy, optimize, className } = await json(req)
   if (input) {
     try {
       return await svgSpreact(input, {

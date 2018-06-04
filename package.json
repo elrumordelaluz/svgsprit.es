@@ -8,8 +8,7 @@
   "dependencies": {
     "micro": "9.3.1",
     "micro-cors": "0.1.0",
-    "svg-spreact": "1.2.1",
-    "urlencoded-body-parser": "2.0.1"
+    "svg-spreact": "1.3.0"
   },
   "devDependencies": {
     "micro-dev": "3.0.0"

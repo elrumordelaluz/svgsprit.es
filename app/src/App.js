@@ -1,7 +1,6 @@
 import React, { Component, Fragment, createRef } from 'react'
 import Dropzone from 'react-dropzone'
 import axios from 'axios'
-import qs from 'qs'
 import './styles.css'
 import githubLogo from './github.svg'
 import codepenLogo from './codepen.svg'
@@ -92,7 +91,7 @@ class App extends Component {
       reader.onload = ({ target }) => {
         svgs.push(target.result)
         if (i === files.length - 1) {
-          this.processInput(svgs.join(), names)
+          this.processInput(svgs, names)
         }
       }
     }
@@ -101,13 +100,13 @@ class App extends Component {
   processInput = (input, names) => {
     const { optimize, tidy } = this.state
     this.setState({ loading: true, copied: false, error: false })
-    const data = qs.stringify({
+    const data = {
       input,
       tidy,
       optimize,
       names,
       className: this.cname.current.value,
-    })
+    }
     axios({
       url,
       method: 'post',
@@ -171,7 +170,9 @@ class App extends Component {
   }
 
   prefillPen = () => {
-    const { output: { defs, refs } } = this.state
+    const {
+      output: { defs, refs },
+    } = this.state
     return JSON.stringify({
       ...penSettings,
       html: `<!-- SVG Sprite -->
@@ -196,7 +197,8 @@ ${refs}`,
           onDropAccepted={this.onDrop}
           className={`wrapper ${loading ? 'loading' : ''}`}
           activeClassName="wrapper__active"
-          rejectClassName="wrapper__reject">
+          rejectClassName="wrapper__reject"
+        >
           <p className="message">Drop SVG files to create the Sprite</p>
           {error && (
             <span className="error">
@@ -211,17 +213,20 @@ ${refs}`,
         </Dropzone>
         <div
           key="output"
-          className={`output ${output && !loading ? 'show' : ''}`}>
+          className={`output ${output && !loading ? 'show' : ''}`}
+        >
           <pre className="code">
             <div className="controls">
               <button
                 className="button copyButton"
-                data-clipboard-target="#defs">
+                data-clipboard-target="#defs"
+              >
                 {copied ? 'Sprite Copied' : 'Copy Sprite'}
               </button>
               <button
                 className="button copyButton"
-                data-clipboard-target="#refs">
+                data-clipboard-target="#refs"
+              >
                 {copied ? 'Refs Copied' : 'Copy Refs'}
               </button>
               <button className="button" onClick={this.downloadDemo}>
@@ -235,7 +240,8 @@ ${refs}`,
                 action="https://codepen.io/pen/define"
                 method="POST"
                 target="_blank"
-                className="codepen_form">
+                className="codepen_form"
+              >
                 <input type="hidden" name="data" value={penValue} />
                 <button className="codepen_btn">
                   <img
@@ -256,7 +262,8 @@ ${refs}`,
         <a
           key="github"
           href="https://github.com/elrumordelaluz/micro-svg-spreact"
-          className="github">
+          className="github"
+        >
           <img src={githubLogo} className="github_logo" alt="github logo" />
         </a>
         <p className={`settings${loading ? ' loading' : ''}`}>
