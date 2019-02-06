@@ -14,7 +14,7 @@
     "micro-dev": "3.0.0"
   },
   "engines": {
-    "node": "^8"
+    "node": ">=8.0.0"
   },
   "scripts": {
     "start": "micro",

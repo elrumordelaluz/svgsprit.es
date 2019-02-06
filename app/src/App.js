@@ -141,14 +141,21 @@ class App extends Component {
     if (output && !loading && !error) {
       const element = document.createElement('a')
       const { refs, defs } = output
-      const html = template({ defs, refs, style: this.style.current.value })
+      const html = template({
+        defs,
+        refs,
+        style: this.style.current.value,
+      })
       const file = new Blob([html], {
         type: 'text/html',
       })
-      const fileURL = URL.createObjectURL(file)
-      element.href = fileURL
-      element.download = `demo.html`
+      const fileURL = window.URL.createObjectURL(file)
+      element.setAttribute('href', fileURL)
+      element.setAttribute('download', `demo.html`)
+      element.style.display = 'none'
+      document.body.appendChild(element)
       element.click()
+      document.body.removeChild(element)
       window.URL.revokeObjectURL(fileURL)
     }
   }
