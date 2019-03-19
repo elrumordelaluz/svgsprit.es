@@ -19,7 +19,7 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
-  "homepage": "https://elrumordelaluz.github.io/micro-svg-spreact",
+  "homepage": "http://svgsprit.es",
   "browserslist": [
     ">0.2%",
     "not dead",
