@@ -3,6 +3,9 @@ const cors = require('micro-cors')()
 const svgSpreact = require('svg-spreact')
 
 const handler = async (req, res) => {
+  if (req.method === 'OPTIONS') {
+    return send(res, 200, 'ok!')
+  }
   const { input, names, tidy, optimize, className } = await json(req)
   if (input) {
     try {
