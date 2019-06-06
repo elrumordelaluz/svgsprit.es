@@ -45,7 +45,7 @@ const template = ({ defs, refs, style }) => `
       SVG Sprite Demo
       <br/>
       <small>
-        created with <a href="https://elrumordelaluz.github.io/micro-svg-spreact/">svg-spreact</a>
+        created with <a href="https://svgsprit.es/">svgsprit.es</a>
       </small>
     </h1>
     ${refs}
