@@ -12,7 +12,7 @@ const handler = async (req, res) => {
       return await svgSpreact(input, {
         ...(tidy ? { tidy: tidy === 'false' ? false : true } : {}),
         ...(optimize ? { optimize: optimize === 'false' ? false : true } : {}),
-        ...(names ? { processId: n => names[n] || `Icon_${n}` } : {}),
+        ...(names ? { processId: (n) => names[n] || `Icon_${n}` } : {}),
         ...(className ? { className } : {}),
       })
     } catch (err) {
