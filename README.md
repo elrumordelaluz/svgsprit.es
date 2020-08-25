@@ -11,20 +11,20 @@
 </p>
 
 <p align="center">  
-  https://elrumordelaluz.github.io/micro-svg-spreact/
+  https://svgsprit.es
 </p>
 
 ## Endpoint
 
-`POST` https://micro-svg-spreact.now.sh/
+`POST` https://svg-spreact.vercel.app/api
 
 ## Params
 
-* `input` <small>[ required ]</small> `string` with _Icons_ to create the _Sprite_
-* `tidy` <small>[ optional ]</small> `boolean` (default: `true`)
-* `optimized` <small>[ optional ]</small> `boolean` (default: `true`)
-* `names` <small>[ optional ]</small> `array` use name for each `id` (defaul: `Icon_${n}`)
-* `className` <small>[ optional ]</small> `string` class to add on each `<use>` element
+- `input` <small>[ required ]</small> `string` with _Icons_ to create the _Sprite_
+- `tidy` <small>[ optional ]</small> `boolean` (default: `true`)
+- `optimized` <small>[ optional ]</small> `boolean` (default: `true`)
+- `names` <small>[ optional ]</small> `array` use name for each `id` (defaul: `Icon_${n}`)
+- `className` <small>[ optional ]</small> `string` class to add on each `<use>` element
 
 ## Related
 
