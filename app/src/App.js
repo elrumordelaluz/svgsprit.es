@@ -1,15 +1,15 @@
-import React, { Component, Fragment, createRef } from 'react'
-import Dropzone from 'react-dropzone'
-import axios from 'axios'
-import './styles.css'
-import githubLogo from './github.svg'
-import codepenLogo from './codepen.svg'
-import Clipboard from 'clipboard'
+import React, { Component, Fragment, createRef } from "react";
+import Dropzone from "react-dropzone";
+import axios from "axios";
+import "./styles.css";
+import githubLogo from "./github.svg";
+import codepenLogo from "./codepen.svg";
+import Clipboard from "clipboard";
 
 const url =
-  process.env.NODE_ENV === 'development'
-    ? 'http://localhost:3000'
-    : 'https://micro-svg-spreact.now.sh/'
+  process.env.NODE_ENV === "development"
+    ? "http://localhost:3000"
+    : "https://micro-svg-spreact.now.sh/";
 
 const template = ({ defs, refs, style }) => `
   <!doctype>
@@ -50,15 +50,15 @@ const template = ({ defs, refs, style }) => `
     </h1>
     ${refs}
   </body>
-`
+`;
 
 const penSettings = {
-  title: 'SVG Spreact',
+  title: "SVG Spreact",
   description:
-    'SVG Sprite created with svg-spreact (https://elrumordelaluz.github.io/micro-svg-spreact/)',
-  tags: ['svg', 'svg-sprite', 'svgson', 'svg-spreact'],
-  editors: '1100',
-}
+    "SVG Sprite created with svg-spreact (https://elrumordelaluz.github.io/micro-svg-spreact/)",
+  tags: ["svg", "svg-sprite", "svgson", "svg-spreact"],
+  editors: "1100",
+};
 
 class App extends Component {
   state = {
@@ -68,118 +68,119 @@ class App extends Component {
     error: false,
     optimize: true,
     tidy: true,
-  }
+  };
 
-  cname = createRef()
-  style = createRef()
+  cname = createRef();
+  style = createRef();
 
   componentDidMount() {
-    this.clipboard = new Clipboard('.copyButton')
-    this.clipboard.on('success', e => {
-      this.setState({ copied: true })
-      e.clearSelection()
-    })
+    this.clipboard = new Clipboard(".copyButton");
+    this.clipboard.on("success", (e) => {
+      this.setState({ copied: true });
+      e.clearSelection();
+    });
   }
 
-  onDrop = files => {
-    let svgs = []
-    const names = files.map(file => file.name.replace('.svg', ''))
+  onDrop = (files) => {
+    let svgs = [];
+    const names = files.map((file) => file.name.replace(".svg", ""));
     for (let i = 0; i < files.length; i++) {
-      const file = files[i]
-      const reader = new FileReader()
-      reader.readAsText(file, 'UTF-8')
+      const file = files[i];
+      const reader = new FileReader();
+      reader.readAsText(file, "UTF-8");
       reader.onload = ({ target }) => {
-        svgs.push(target.result)
+        svgs.push(target.result);
         if (i === files.length - 1) {
-          this.processInput(svgs, names)
+          this.processInput(svgs, names);
         }
-      }
+      };
     }
-  }
+  };
 
   processInput = (input, names) => {
-    const { optimize, tidy } = this.state
-    this.setState({ loading: true, copied: false, error: false })
+    console.log({ input });
+    const { optimize, tidy } = this.state;
+    this.setState({ loading: true, copied: false, error: false });
     const data = {
       input,
       tidy,
       optimize,
       names,
       className: this.cname.current.value,
-    }
+    };
     axios({
       url,
-      method: 'post',
+      method: "post",
       data,
     })
-      .then(res => this.setState({ output: res.data, loading: false }))
-      .catch(e => {
+      .then((res) => this.setState({ output: res.data, loading: false }))
+      .catch((e) => {
         this.setState({
           loading: false,
           output: null,
           error: true,
-        })
-      })
-  }
+        });
+      });
+  };
 
-  resetOutput = () => this.setState({ output: null, copied: false })
+  resetOutput = () => this.setState({ output: null, copied: false });
 
   handleOptimized = () => {
-    this.setState(prevState => ({
+    this.setState((prevState) => ({
       optimize: !prevState.optimize,
-    }))
-  }
+    }));
+  };
 
   handleTidy = () => {
-    this.setState(prevState => ({
+    this.setState((prevState) => ({
       tidy: !prevState.tidy,
-    }))
-  }
+    }));
+  };
 
   downloadDemo = () => {
-    const { output, loading, error } = this.state
+    const { output, loading, error } = this.state;
     if (output && !loading && !error) {
-      const element = document.createElement('a')
-      const { refs, defs } = output
+      const element = document.createElement("a");
+      const { refs, defs } = output;
       const html = template({
         defs,
         refs,
         style: this.style.current.value,
-      })
+      });
       const file = new Blob([html], {
-        type: 'text/html',
-      })
-      const fileURL = window.URL.createObjectURL(file)
-      element.setAttribute('href', fileURL)
-      element.setAttribute('download', `demo.html`)
-      element.style.display = 'none'
-      document.body.appendChild(element)
-      element.click()
-      document.body.removeChild(element)
-      window.URL.revokeObjectURL(fileURL)
+        type: "text/html",
+      });
+      const fileURL = window.URL.createObjectURL(file);
+      element.setAttribute("href", fileURL);
+      element.setAttribute("download", `demo.html`);
+      element.style.display = "none";
+      document.body.appendChild(element);
+      element.click();
+      document.body.removeChild(element);
+      window.URL.revokeObjectURL(fileURL);
     }
-  }
+  };
 
   downloadSprite = () => {
-    const { output, loading, error } = this.state
+    const { output, loading, error } = this.state;
     if (output && !loading && !error) {
-      const element = document.createElement('a')
-      const { defs } = output
+      const element = document.createElement("a");
+      const { defs } = output;
       const file = new Blob([defs], {
-        type: 'image/svg+xml',
-      })
-      const fileURL = URL.createObjectURL(file)
-      element.href = fileURL
-      element.download = `sprite.svg`
-      element.click()
-      window.URL.revokeObjectURL(fileURL)
+        type: "image/svg+xml",
+      });
+      const fileURL = URL.createObjectURL(file);
+      element.href = fileURL;
+      element.download = `sprite.svg`;
+      element.click();
+      window.URL.revokeObjectURL(fileURL);
     }
-  }
+  };
 
   prefillPen = () => {
     const {
       output: { defs, refs },
-    } = this.state
+    } = this.state;
     return JSON.stringify({
       ...penSettings,
       html: `<!-- SVG Sprite -->
@@ -187,13 +188,13 @@ ${defs}
 <!-- SVG References -->
 ${refs}`,
       css: this.style.current.value,
-      css_starter: 'normalize',
-    })
-  }
+      css_starter: "normalize",
+    });
+  };
 
   render() {
-    const { output, loading, copied, error, optimize, tidy } = this.state
-    const penValue = output && !loading && !error ? this.prefillPen() : ''
+    const { output, loading, copied, error, optimize, tidy } = this.state;
+    const penValue = output && !loading && !error ? this.prefillPen() : "";
     return (
       <Fragment>
         <Dropzone
@@ -202,7 +203,7 @@ ${refs}`,
           disabled={loading}
           multiple={true}
           onDropAccepted={this.onDrop}
-          className={`wrapper ${loading ? 'loading' : ''}`}
+          className={`wrapper ${loading ? "loading" : ""}`}
           activeClassName="wrapper__active"
           rejectClassName="wrapper__reject"
         >
@@ -220,7 +221,7 @@ ${refs}`,
         </Dropzone>
         <div
           key="output"
-          className={`output ${output && !loading ? 'show' : ''}`}
+          className={`output ${output && !loading ? "show" : ""}`}
         >
           <pre className="code">
             <div className="controls">
@@ -228,13 +229,13 @@ ${refs}`,
                 className="button copyButton"
                 data-clipboard-target="#defs"
               >
-                {copied ? 'Sprite Copied' : 'Copy Sprite'}
+                {copied ? "Sprite Copied" : "Copy Sprite"}
               </button>
               <button
                 className="button copyButton"
                 data-clipboard-target="#refs"
               >
-                {copied ? 'Refs Copied' : 'Copy Refs'}
+                {copied ? "Refs Copied" : "Copy Refs"}
               </button>
               <button className="button" onClick={this.downloadDemo}>
                 Download Demo
@@ -273,13 +274,13 @@ ${refs}`,
         >
           <img src={githubLogo} className="github_logo" alt="github logo" />
         </a>
-        <p className={`settings${loading ? ' loading' : ''}`}>
+        <p className={`settings${loading ? " loading" : ""}`}>
           <label>
-            tidy{' '}
+            tidy{" "}
             <input type="checkbox" checked={tidy} onChange={this.handleTidy} />
           </label>
           <label>
-            optimize{' '}
+            optimize{" "}
             <input
               type="checkbox"
               checked={optimize}
@@ -290,7 +291,7 @@ ${refs}`,
             class <input ref={this.cname} type="text" defaultValue="icon" />
           </label>
           <label>
-            style{' '}
+            style{" "}
             <textarea
               ref={this.style}
               rows="5"
@@ -303,8 +304,8 @@ ${refs}`,
           </label>
         </p>
       </Fragment>
-    )
+    );
   }
 }
 
-export default App
+export default App;
