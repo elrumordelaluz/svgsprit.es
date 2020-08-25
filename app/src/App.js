@@ -9,7 +9,7 @@ import Clipboard from 'clipboard'
 const url =
   process.env.NODE_ENV === 'development'
     ? 'http://localhost:3000'
-    : 'https://https://svg-spreact.vercel.app/api'
+    : 'https://svg-spreact.vercel.app/api'
 
 const template = ({ defs, refs, style }) => `
   <!doctype>
