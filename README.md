@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://elrumordelaluz.github.io/micro-svg-spreact/"><img alt="SVG Spreact" title="SVG Spreact" src="https://camo.githubusercontent.com/faf6e2edc6037845c56e7b1f5c9fd5c7fcdecdad/68747470733a2f2f63646e2e7261776769742e636f6d2f656c72756d6f7264656c616c757a2f7376672d737072656163742f32623538313138622f6c6f676f2e737667" width="250"></a>
+  <a href="https://svgsprit.es"><img alt="svgsprit.es" title="svgsprit.es" src="https://raw.githubusercontent.com/elrumordelaluz/svgsprit.es/master/logo.svg" width="250"></a>
 </p>
 
 <p align="center">
