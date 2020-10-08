@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  Public endpoint to generate <code>SVG</code> Sprites using <a href="https://github.com/elrumordelaluz/svg-spreact">svg-spreact</a>
+  Public endpoint to generate <code>SVG</code> Sprites using <a href="https://github.com/elrumordelaluz/svgsprit.es">svgsprit.es</a>
 </p>
 
 <p align="center">
@@ -16,7 +16,7 @@
 
 ## Endpoint
 
-`POST` https://svg-spreact.vercel.app/api
+`POST` https://svgsprit.es/api
 
 ## Params
 
