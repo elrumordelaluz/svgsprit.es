@@ -1,10 +1,17 @@
-import React, { Component, Fragment, createRef } from 'react'
-import Dropzone from 'react-dropzone'
+import React, {
+  useCallback,
+  useReducer,
+  useRef,
+  useEffect,
+  useState,
+} from 'react'
+import { useDropzone } from 'react-dropzone'
 import axios from 'axios'
-import './styles.css'
+import Clipboard from 'clipboard'
 import githubLogo from './github.svg'
 import codepenLogo from './codepen.svg'
-import Clipboard from 'clipboard'
+import logo from './logo.svg'
+import './styles.css'
 
 const url =
   process.env.NODE_ENV === 'development'
@@ -54,36 +61,63 @@ const template = ({ defs, refs, style }) => `
 
 const penSettings = {
   title: 'SVG Spreact',
-  description:
-    'SVG Sprite created with svg-spreact (https://elrumordelaluz.github.io/micro-svg-spreact/)',
+  description: 'SVG Sprite created with svgsprit.es (https://svgsprit.es)',
   tags: ['svg', 'svg-sprite', 'svgson', 'svg-spreact'],
   editors: '1100',
 }
 
-class App extends Component {
-  state = {
-    output: null,
-    loading: false,
-    copied: false,
-    error: false,
-    optimize: true,
-    tidy: true,
+const initialState = {
+  output: null,
+  loading: false,
+  error: false,
+  copied: false,
+}
+
+function reducer(state, action) {
+  switch (action.type) {
+    case 'processing-launch':
+      return { ...state, loading: true, copied: false, error: false }
+    case 'processing-success':
+      return { ...state, output: action.payload, loading: false }
+    case 'processing-fail':
+      return {
+        ...state,
+        loading: false,
+        output: null,
+        error: true,
+      }
+    case 'copy':
+      return { ...state, copied: true }
+    case 'reset':
+      return initialState
+    default:
+      throw new Error()
   }
+}
 
-  cname = createRef()
-  style = createRef()
+function App() {
+  const [{ output, loading, error, copied }, dispatch] = useReducer(
+    reducer,
+    initialState
+  )
+  const [optimize, setOptimize] = useState(true)
+  const [tidy, setTidy] = useState(true)
 
-  componentDidMount() {
-    this.clipboard = new Clipboard('.copyButton')
-    this.clipboard.on('success', (e) => {
-      this.setState({ copied: true })
+  const cname = useRef(null)
+  const style = useRef(null)
+
+  useEffect(() => {
+    let clipboard = new Clipboard('.copyButton')
+    clipboard.on('success', (e) => {
+      dispatch({ type: 'copy' })
       e.clearSelection()
     })
-  }
+  }, [])
 
-  onDrop = (files) => {
+  const onDrop = useCallback((files) => {
     let svgs = []
     let names = []
+
     for (let i = 0; i < files.length; i++) {
       const file = files[i]
       const reader = new FileReader()
@@ -93,60 +127,43 @@ class App extends Component {
         names.push(file.name.replace('.svg', ''))
 
         if (i === files.length - 1) {
-          this.processInput(svgs, names)
+          processInput(svgs, names)
         }
       }
     }
-  }
+  }, [])
 
-  processInput = (input, names) => {
-    const { optimize, tidy } = this.state
-    this.setState({ loading: true, copied: false, error: false })
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop })
+
+  async function processInput(input, names) {
+    dispatch({ type: 'processing-launch' })
     const data = {
       input,
       tidy,
       optimize,
       names,
-      className: this.cname.current.value,
+      className: cname.current?.value,
     }
-    axios({
-      url,
-      method: 'post',
-      data,
-    })
-      .then((res) => this.setState({ output: res.data, loading: false }))
-      .catch((e) => {
-        this.setState({
-          loading: false,
-          output: null,
-          error: true,
-        })
+    try {
+      const res = await axios({
+        url,
+        method: 'post',
+        data,
       })
+      dispatch({ type: 'processing-success', payload: res.data })
+    } catch (err) {
+      dispatch({ type: 'processing-fail' })
+    }
   }
 
-  resetOutput = () => this.setState({ output: null, copied: false })
-
-  handleOptimized = () => {
-    this.setState((prevState) => ({
-      optimize: !prevState.optimize,
-    }))
-  }
-
-  handleTidy = () => {
-    this.setState((prevState) => ({
-      tidy: !prevState.tidy,
-    }))
-  }
-
-  downloadDemo = () => {
-    const { output, loading, error } = this.state
+  function downloadDemo() {
     if (output && !loading && !error) {
       const element = document.createElement('a')
       const { refs, defs } = output
       const html = template({
         defs,
         refs,
-        style: this.style.current.value,
+        style: style.current.value,
       })
       const file = new Blob([html], {
         type: 'text/html',
@@ -162,8 +179,7 @@ class App extends Component {
     }
   }
 
-  downloadSprite = () => {
-    const { output, loading, error } = this.state
+  function downloadSprite() {
     if (output && !loading && !error) {
       const element = document.createElement('a')
       const { defs } = output
@@ -178,135 +194,124 @@ class App extends Component {
     }
   }
 
-  prefillPen = () => {
-    const {
-      output: { defs, refs },
-    } = this.state
+  function prefillPen() {
+    const { defs, refs } = output
     return JSON.stringify({
       ...penSettings,
       html: `<!-- SVG Sprite -->
 ${defs}
 <!-- SVG References -->
 ${refs}`,
-      css: this.style.current.value,
+      css: style.current?.value,
       css_starter: 'normalize',
     })
   }
 
-  render() {
-    const { output, loading, copied, error, optimize, tidy } = this.state
-    const penValue = output && !loading && !error ? this.prefillPen() : ''
-    return (
-      <Fragment>
-        <Dropzone
-          key="dropzone"
-          accept="image/svg+xml"
-          disabled={loading}
-          multiple={true}
-          onDropAccepted={this.onDrop}
-          className={`wrapper ${loading ? 'loading' : ''}`}
-          activeClassName="wrapper__active"
-          rejectClassName="wrapper__reject"
-        >
-          <p className="message">Drop SVG files to create the Sprite</p>
-          {error && (
-            <span className="error">
-              An error was verified during your last svg processed
-            </span>
-          )}
-          <img
-            src="https://camo.githubusercontent.com/faf6e2edc6037845c56e7b1f5c9fd5c7fcdecdad/68747470733a2f2f63646e2e7261776769742e636f6d2f656c72756d6f7264656c616c757a2f7376672d737072656163742f32623538313138622f6c6f676f2e737667"
-            className="logo"
-            alt="logo"
-          />
-        </Dropzone>
-        <div
-          key="output"
-          className={`output ${output && !loading ? 'show' : ''}`}
-        >
-          <pre className="code">
-            <div className="controls">
-              <button
-                className="button copyButton"
-                data-clipboard-target="#defs"
-              >
-                {copied ? 'Sprite Copied' : 'Copy Sprite'}
-              </button>
-              <button
-                className="button copyButton"
-                data-clipboard-target="#refs"
-              >
-                {copied ? 'Refs Copied' : 'Copy Refs'}
-              </button>
-              <button className="button" onClick={this.downloadDemo}>
-                Download Demo
-              </button>
-              <button className="button" onClick={this.downloadSprite}>
-                Download Sprite
-              </button>
+  const penValue = output && !loading && !error ? prefillPen() : ''
+  return (
+    <>
+      <div
+        {...getRootProps()}
+        className={`wrapper ${loading ? 'loading' : ''}`}
+      >
+        <input {...getInputProps()} />
 
-              <form
-                action="https://codepen.io/pen/define"
-                method="POST"
-                target="_blank"
-                className="codepen_form"
-              >
-                <input type="hidden" name="data" value={penValue} />
-                <button className="codepen_btn">
-                  <img
-                    src={codepenLogo}
-                    className="codepen_logo"
-                    alt="codepen logo"
-                  />
-                </button>
-              </form>
-              <button className="button" onClick={this.resetOutput}>
-                ✕
+        <p className="message">Drop SVG files to create the Sprite</p>
+        {error && (
+          <span className="error">
+            An error was verified during your last svg processed
+          </span>
+        )}
+        <img src={logo} className="logo" alt="logo" />
+      </div>
+
+      <div
+        key="output"
+        className={`output ${output && !loading ? 'show' : ''}`}
+      >
+        <pre className="code">
+          <div className="controls">
+            <button className="button copyButton" data-clipboard-target="#defs">
+              {copied ? 'Sprite Copied' : 'Copy Sprite'}
+            </button>
+            <button className="button copyButton" data-clipboard-target="#refs">
+              {copied ? 'Refs Copied' : 'Copy Refs'}
+            </button>
+            <button className="button" onClick={downloadDemo}>
+              Download Demo
+            </button>
+            <button className="button" onClick={downloadSprite}>
+              Download Sprite
+            </button>
+
+            <form
+              action="https://codepen.io/pen/define"
+              method="POST"
+              target="_blank"
+              className="codepen_form"
+            >
+              <input type="hidden" name="data" value={penValue} />
+              <button className="codepen_btn">
+                <img
+                  src={codepenLogo}
+                  className="codepen_logo"
+                  alt="codepen logo"
+                />
               </button>
-            </div>
-            <code id="defs">{output && output.defs}</code>
-            <code id="refs">{output && output.refs}</code>
-          </pre>
-        </div>
-        <a
-          key="github"
-          href="https://github.com/elrumordelaluz/micro-svg-spreact"
-          className="github"
-        >
-          <img src={githubLogo} className="github_logo" alt="github logo" />
-        </a>
-        <p className={`settings${loading ? ' loading' : ''}`}>
-          <label>
-            tidy{' '}
-            <input type="checkbox" checked={tidy} onChange={this.handleTidy} />
-          </label>
-          <label>
-            optimize{' '}
-            <input
-              type="checkbox"
-              checked={optimize}
-              onChange={this.handleOptimized}
-            />
-          </label>
-          <label>
-            class <input ref={this.cname} type="text" defaultValue="icon" />
-          </label>
-          <label>
-            style{' '}
-            <textarea
-              ref={this.style}
-              rows="5"
-              defaultValue={`.icon { 
+            </form>
+            <button
+              className="button"
+              onClick={() => dispatch({ type: 'reset' })}
+            >
+              ✕
+            </button>
+          </div>
+          <code id="defs">{output && output.defs}</code>
+          <code id="refs">{output && output.refs}</code>
+        </pre>
+      </div>
+      <a
+        key="github"
+        href="https://github.com/elrumordelaluz/svgsprit.es"
+        className="github"
+      >
+        <img src={githubLogo} className="github_logo" alt="github logo" />
+      </a>
+      <p className={`settings${loading ? ' loading' : ''}`}>
+        <label>
+          tidy{' '}
+          <input
+            type="checkbox"
+            checked={tidy}
+            onChange={() => setTidy((t) => !t)}
+          />
+        </label>
+        <label>
+          optimize{' '}
+          <input
+            type="checkbox"
+            checked={optimize}
+            onChange={() => setOptimize((o) => !o)}
+          />
+        </label>
+        <label>
+          class <input ref={cname} type="text" defaultValue="icon" />
+        </label>
+        <label>
+          style{' '}
+          <textarea
+            ref={style}
+            rows="5"
+            defaultValue={`.icon { 
   width: 50px; 
   height: 50px;
   margin: .5em;
 }`}
-            />
-          </label>
-        </p>
-      </Fragment>
-    )
-  }
+          />
+        </label>
+      </p>
+    </>
+  )
 }
 
 export default App
