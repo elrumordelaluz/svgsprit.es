@@ -83,13 +83,15 @@ class App extends Component {
 
   onDrop = (files) => {
     let svgs = []
-    const names = files.map((file) => file.name.replace('.svg', ''))
+    let names = []
     for (let i = 0; i < files.length; i++) {
       const file = files[i]
       const reader = new FileReader()
       reader.readAsText(file, 'UTF-8')
       reader.onload = ({ target }) => {
         svgs.push(target.result)
+        names.push(file.name.replace('.svg', ''))
+
         if (i === files.length - 1) {
           this.processInput(svgs, names)
         }
