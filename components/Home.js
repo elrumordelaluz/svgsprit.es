@@ -5,13 +5,13 @@ import React, {
   useEffect,
   useState,
 } from 'react'
+import Image from 'next/image'
 import { useDropzone } from 'react-dropzone'
 import axios from 'axios'
 import Clipboard from 'clipboard'
 import githubLogo from './github.svg'
 import codepenLogo from './codepen.svg'
 import logo from './logo.svg'
-import './styles.css'
 
 const url =
   process.env.NODE_ENV === 'development'
@@ -222,7 +222,8 @@ ${refs}`,
             An error was verified during your last svg processed
           </span>
         )}
-        <img src={logo} className="logo" alt="logo" />
+
+        <Image src={logo} alt="Svgprit.es" className="logo" layout="fill" />
       </div>
 
       <div
@@ -252,11 +253,12 @@ ${refs}`,
             >
               <input type="hidden" name="data" value={penValue} />
               <button className="codepen_btn">
-                <img
+                <Image src={codepenLogo} alt="Codepen" />
+                {/* <img
                   src={codepenLogo}
                   className="codepen_logo"
                   alt="codepen logo"
-                />
+                /> */}
               </button>
             </form>
             <button
@@ -273,9 +275,9 @@ ${refs}`,
       <a
         key="github"
         href="https://github.com/elrumordelaluz/svgsprit.es"
-        className="github"
+        className="github github_logo"
       >
-        <img src={githubLogo} className="github_logo" alt="github logo" />
+        <Image src={githubLogo} alt="GitHub" />
       </a>
       <p className={`settings${loading ? ' loading' : ''}`}>
         <label>
