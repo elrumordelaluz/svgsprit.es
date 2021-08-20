@@ -114,24 +114,27 @@ function App() {
     })
   }, [])
 
-  const onDrop = useCallback((files) => {
-    let svgs = []
-    let names = []
+  const onDrop = useCallback(
+    (files) => {
+      let svgs = []
+      let names = []
 
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i]
-      const reader = new FileReader()
-      reader.readAsText(file, 'UTF-8')
-      reader.onload = ({ target }) => {
-        svgs.push(target.result)
-        names.push(file.name.replace('.svg', ''))
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i]
+        const reader = new FileReader()
+        reader.readAsText(file, 'UTF-8')
+        reader.onload = ({ target }) => {
+          svgs.push(target.result)
+          names.push(file.name.replace('.svg', ''))
 
-        if (i === files.length - 1) {
-          processInput(svgs, names)
+          if (i === files.length - 1) {
+            processInput(svgs, names)
+          }
         }
       }
-    }
-  }, [])
+    },
+    [tidy, optimize]
+  )
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop })
 
@@ -144,6 +147,7 @@ function App() {
       names,
       className: cname.current?.value,
     }
+
     try {
       const res = await axios({
         url,
