@@ -41,7 +41,7 @@ const handler = async (req, res) => {
     return res
       .status(200)
       .send(
-        '<p style="display:flex;align-items:center;justify-content:center;height:100vh;"><a style="text-decoration:none;color:inherit;font-family:sans-serif;" href="https://elrumordelaluz.github.io/micro-svg-spreact/">visit svg-spreact</a></p>'
+        '<p style="display:flex;align-items:center;justify-content:center;height:100vh;"><a style="text-decoration:none;color:inherit;font-family:sans-serif;" href="https://svgsprit.es">visit svgsprit.es</a></p>'
       )
   }
 }
