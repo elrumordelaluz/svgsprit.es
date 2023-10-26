@@ -21,6 +21,7 @@ body {
 .wrapper__active {
   background-color: #78c2d3;
 }
+
 .wrapper__reject {
   background-color: #e03756;
 }
@@ -117,6 +118,7 @@ body {
 }
 
 .codepen_btn {
+  position: relative;
   margin: 0;
   padding: 0;
   border: 0;
@@ -153,7 +155,7 @@ body {
   font-family: monospace;
 }
 
-.settings > * {
+.settings>* {
   margin-bottom: 0.5em;
 }
 

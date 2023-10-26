@@ -15,8 +15,8 @@ import logo from './logo.svg'
 
 const url =
   process.env.NODE_ENV === 'development'
-    ? '/api'
-    : 'https://svg-spreact.vercel.app/api'
+    ? '/api/generate'
+    : 'https://svg-spreact.vercel.app/api/generate'
 
 const template = ({ defs, refs, style }) => `
   <!doctype>
@@ -227,7 +227,7 @@ ${refs}`,
           </span>
         )}
 
-        <Image src={logo} alt="Svgprit.es" className="logo" layout="fill" />
+        <Image src={logo} alt="Svgprit.es" className="logo" fill />
       </div>
 
       <div
@@ -257,7 +257,7 @@ ${refs}`,
             >
               <input type="hidden" name="data" value={penValue} />
               <button className="codepen_btn">
-                <Image src={codepenLogo} alt="Codepen" />
+                <Image src={codepenLogo} alt="Codepen" fill />
                 {/* <img
                   src={codepenLogo}
                   className="codepen_logo"
@@ -281,7 +281,7 @@ ${refs}`,
         href="https://github.com/elrumordelaluz/svgsprit.es"
         className="github github_logo"
       >
-        <Image src={githubLogo} alt="GitHub" />
+        <Image src={githubLogo} alt="GitHub" fill />
       </a>
       <p className={`settings${loading ? ' loading' : ''}`}>
         <label>

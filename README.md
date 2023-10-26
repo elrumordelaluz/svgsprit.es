@@ -16,7 +16,7 @@
 
 ## Endpoint
 
-`POST` https://svgsprit.es/api
+`POST` https://svgsprit.es/api/generate
 
 ## Params
 
