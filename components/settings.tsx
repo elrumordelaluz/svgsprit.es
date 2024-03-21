@@ -1,16 +1,16 @@
-import { Card, CardContent, CardHeader } from "@/components/ui/card"
+import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "@/components/ui/collapsible"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Switch } from "@/components/ui/switch"
-import { Textarea } from "@/components/ui/textarea"
-import { AlignRightIcon, Github } from "lucide-react"
-import { RefObject } from "react"
-import { Button } from "./ui/button"
+} from '@/components/ui/collapsible'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Switch } from '@/components/ui/switch'
+import { Textarea } from '@/components/ui/textarea'
+import { AlignRightIcon, Github } from 'lucide-react'
+import { RefObject } from 'react'
+import { Button } from './ui/button'
 
 export function Settings({
   optimize,
@@ -19,10 +19,12 @@ export function Settings({
   setTidy,
   inputRef,
   textareaRef,
+  disabled,
 }: {
   optimize: boolean | undefined
   setOptimize: (checked: boolean) => void
   tidy: boolean | undefined
+  disabled?: boolean
   setTidy: (checked: boolean) => void
   inputRef?: RefObject<HTMLInputElement>
   textareaRef?: RefObject<HTMLTextAreaElement>
@@ -65,7 +67,7 @@ export function Settings({
               <Label htmlFor="optimize" className="flex flex-col space-y-1">
                 <span>Optimize</span>
                 <span className="font-normal leading-snug text-muted-foreground">
-                  Optimize output using{" "}
+                  Optimize output using{' '}
                   <a
                     href="https://github.com/svg/svgo"
                     target="_blank"
@@ -87,23 +89,22 @@ export function Settings({
               <Input
                 type="classname"
                 id="classname"
-                placeholder=".classname"
+                placeholder="icon-class"
                 ref={inputRef}
                 defaultValue="icon"
+                disabled={disabled}
               />
             </div>
             <div className="grid w-full gap-1.5">
               <Label htmlFor="styles">Custom styles</Label>
               <Textarea
-                placeholder=".icon { }"
+                placeholder="width:25px;"
                 id="styles"
                 ref={textareaRef}
-                className="min-h-32"
-                defaultValue={`.icon { 
-  width: 50px; 
-  height: 50px;
-  margin: .5em;
-}`}
+                className="min-h-24"
+                defaultValue={`width: 50px; 
+height: 50px;
+margin: .5em;`}
               />
             </div>
           </CardContent>

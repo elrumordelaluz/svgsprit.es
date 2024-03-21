@@ -29,6 +29,7 @@ import {
   Download,
   ImageDown,
   Loader,
+  X,
 } from 'lucide-react'
 import Image from 'next/image'
 import { useCallback, useEffect, useReducer, useRef, useState } from 'react'
@@ -158,7 +159,12 @@ export default function Home() {
 ${defs}
 <!-- SVG References -->
 ${refs}`,
-      css: textareaRef?.current?.value,
+      css:
+        inputRef?.current?.value !== ''
+          ? `.${inputRef?.current?.value} { 
+  ${textareaRef?.current?.value} 
+}`
+          : '',
       css_starter: 'normalize',
     })
   }
@@ -188,6 +194,7 @@ ${refs}`,
           setTidy={setTidy}
           inputRef={inputRef}
           textareaRef={textareaRef}
+          disabled={output}
         />
       </motion.div>
       <AnimatePresence>
@@ -202,6 +209,23 @@ ${refs}`,
           </motion.div>
         ) : null}
       </AnimatePresence>
+      {output ? (
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="destructive"
+                size="icon"
+                onClick={() => dispatch({ type: 'reset' })}
+                className="absolute top-4 right-4"
+              >
+                <X />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Reset</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      ) : null}
       <Drawer open={open} onOpenChange={setOpen}>
         {output ? (
           <DrawerTrigger className="absolute bottom-4 right-4" asChild>
