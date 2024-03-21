@@ -1,8 +1,8 @@
-"use client"
+'use client'
 
-import { Info } from "@/components/info"
-import { Settings } from "@/components/settings"
-import { Button } from "@/components/ui/button"
+import { Info } from '@/components/info'
+import { Settings } from '@/components/settings'
+import { Button } from '@/components/ui/button'
 import {
   Drawer,
   DrawerClose,
@@ -12,15 +12,15 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from "@/components/ui/drawer"
+} from '@/components/ui/drawer'
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip"
-import { useCopyToClipboard } from "@uidotdev/usehooks"
-import { AnimatePresence, motion } from "framer-motion"
+} from '@/components/ui/tooltip'
+import { useCopyToClipboard } from '@uidotdev/usehooks'
+import { AnimatePresence, motion } from 'framer-motion'
 import {
   ClipboardCheckIcon,
   ClipboardIcon,
@@ -29,13 +29,13 @@ import {
   Download,
   ImageDown,
   Loader,
-} from "lucide-react"
-import Image from "next/image"
-import { useCallback, useEffect, useReducer, useRef, useState } from "react"
-import { useDropzone } from "react-dropzone"
-import { PrismLight as SyntaxHighlighter } from "react-syntax-highlighter"
-import { oneDark } from "react-syntax-highlighter/dist/cjs/styles/prism"
-import logo from "./icon.svg"
+} from 'lucide-react'
+import Image from 'next/image'
+import { useCallback, useEffect, useReducer, useRef, useState } from 'react'
+import { useDropzone } from 'react-dropzone'
+import { PrismLight as SyntaxHighlighter } from 'react-syntax-highlighter'
+import { oneDark } from 'react-syntax-highlighter/dist/cjs/styles/prism'
+import logo from './icon.svg'
 
 export default function Home() {
   const constraintsRef = useRef(null)
@@ -43,22 +43,22 @@ export default function Home() {
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const [copiedText, copyToClipboard] = useCopyToClipboard()
   const hasCopiedRefs =
-    Boolean(copiedText) && copiedText?.includes("use xlink:href")
+    Boolean(copiedText) && copiedText?.includes('use xlink:href')
   const hasCopiedDefs =
-    Boolean(copiedText) && !copiedText?.includes("use xlink:href")
+    Boolean(copiedText) && !copiedText?.includes('use xlink:href')
   const [open, setOpen] = useState(false)
   const [optimize, setOptimize] = useState(true)
   const [tidy, setTidy] = useState(true)
   const [{ output, loading, error, copied }, dispatch] = useReducer(
     reducer,
-    initialState,
+    initialState
   )
 
   async function processInput(
     input: (string | ArrayBuffer | null | undefined)[],
-    names: string[],
+    names: string[]
   ) {
-    dispatch({ type: "processing-launch" })
+    dispatch({ type: 'processing-launch' })
     const data = {
       input,
       tidy,
@@ -68,15 +68,15 @@ export default function Home() {
     }
 
     try {
-      const res = await fetch("/api/generate", {
-        method: "POST",
+      const res = await fetch('/api/generate', {
+        method: 'POST',
         body: JSON.stringify(data),
       })
       const payload = await res.json()
 
-      dispatch({ type: "processing-success", payload })
+      dispatch({ type: 'processing-success', payload })
     } catch (err) {
-      dispatch({ type: "processing-fail" })
+      dispatch({ type: 'processing-fail' })
     }
   }
 
@@ -88,10 +88,10 @@ export default function Home() {
       for (let i = 0; i < files.length; i++) {
         const file = files[i]
         const reader = new FileReader()
-        reader.readAsText(file, "UTF-8")
+        reader.readAsText(file, 'UTF-8')
         reader.onload = ({ target }) => {
           svgs.push(target?.result)
-          names.push(file.name.replace(".svg", ""))
+          names.push(file.name.replace('.svg', ''))
 
           if (i === files.length - 1) {
             processInput(svgs, names)
@@ -99,7 +99,7 @@ export default function Home() {
         }
       }
     },
-    [tidy, optimize],
+    [tidy, optimize]
   )
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -114,7 +114,7 @@ export default function Home() {
 
   function downloadDemo() {
     if (output && !loading && !error) {
-      const element = document.createElement("a")
+      const element = document.createElement('a')
       const { refs, defs } = output
       const html = template({
         defs,
@@ -122,12 +122,12 @@ export default function Home() {
         style: textareaRef?.current?.value,
       })
       const file = new Blob([html], {
-        type: "text/html",
+        type: 'text/html',
       })
       const fileURL = window.URL.createObjectURL(file)
-      element.setAttribute("href", fileURL)
-      element.setAttribute("download", `demo.html`)
-      element.style.display = "none"
+      element.setAttribute('href', fileURL)
+      element.setAttribute('download', `demo.html`)
+      element.style.display = 'none'
       document.body.appendChild(element)
       element.click()
       document.body.removeChild(element)
@@ -137,10 +137,10 @@ export default function Home() {
 
   function downloadSprite() {
     if (output && !loading && !error) {
-      const element = document.createElement("a")
+      const element = document.createElement('a')
       const { defs } = output
       const file = new Blob([defs], {
-        type: "image/svg+xml",
+        type: 'image/svg+xml',
       })
       const fileURL = URL.createObjectURL(file)
       element.href = fileURL
@@ -159,11 +159,11 @@ ${defs}
 <!-- SVG References -->
 ${refs}`,
       css: textareaRef?.current?.value,
-      css_starter: "normalize",
+      css_starter: 'normalize',
     })
   }
 
-  const penValue = output && !loading && !error ? prefillPen() : ""
+  const penValue = output && !loading && !error ? prefillPen() : ''
 
   return (
     <motion.main
@@ -210,10 +210,10 @@ ${refs}`,
             </Button>
           </DrawerTrigger>
         ) : null}
-        <DrawerContent>
+        <DrawerContent className="max-h-[calc(100vh-200px)]">
           <DrawerHeader className="flex justify-between pt-0">
             <div>
-              <DrawerTitle>SVG Sprite result</DrawerTitle>
+              <DrawerTitle className="text-left">SVG Sprite result</DrawerTitle>
               <DrawerDescription>
                 Now you can use your icons as SVG Sprite
               </DrawerDescription>
@@ -259,8 +259,8 @@ ${refs}`,
               </TooltipProvider>
             </div>
           </DrawerHeader>
-          <div className="grid grid-cols-2 gap-4 px-4">
-            <div className="relative">
+          <div className="grid grid-cols-1 gap-4 px-4 md:grid-cols-2">
+            <div className="relative h-48 w-full md:h-96">
               <Button
                 className="absolute right-2 top-4 h-8 w-8"
                 onClick={() => copyToClipboard(output?.defs)}
@@ -274,13 +274,14 @@ ${refs}`,
               </Button>
               <SyntaxHighlighter
                 style={oneDark}
-                className="mockup-code scrollbar-thin scrollbar-track-base-content/5 scrollbar-thumb-base-content/40 scrollbar-track-rounded-md scrollbar-thumb-rounded"
+                className="max-h-full w-full overflow-y-auto"
                 language="html"
+                wrapLines
               >
                 {output?.defs}
               </SyntaxHighlighter>
             </div>
-            <div className="relative">
+            <div className="relative h-48 w-full md:h-96">
               <Button
                 className="absolute right-2 top-4 h-8 w-8"
                 onClick={() => copyToClipboard(output?.refs)}
@@ -294,7 +295,7 @@ ${refs}`,
               </Button>
               <SyntaxHighlighter
                 style={oneDark}
-                className="mockup-code scrollbar-thin scrollbar-track-base-content/5 scrollbar-thumb-base-content/40 scrollbar-track-rounded-md scrollbar-thumb-rounded"
+                className="max-h-full overflow-y-auto"
                 language="html"
               >
                 {output?.refs}
@@ -321,20 +322,20 @@ const initialState = {
 
 function reducer(state: any, action: { type: string; payload?: any }) {
   switch (action.type) {
-    case "processing-launch":
+    case 'processing-launch':
       return { ...state, loading: true, copied: false, error: false }
-    case "processing-success":
+    case 'processing-success':
       return { ...state, output: action.payload, loading: false }
-    case "processing-fail":
+    case 'processing-fail':
       return {
         ...state,
         loading: false,
         output: null,
         error: true,
       }
-    case "copy":
+    case 'copy':
       return { ...state, copied: true }
-    case "reset":
+    case 'reset':
       return initialState
     default:
       throw new Error()
@@ -391,8 +392,8 @@ const template = ({
 `
 
 const penSettings = {
-  title: "Svgsprit.es",
-  description: "SVG Sprite created with svgsprit.es (https://svgsprit.es)",
-  tags: ["svg", "svg-sprite", "svgson", "svg-spreact"],
-  editors: "1100",
+  title: 'Svgsprit.es',
+  description: 'SVG Sprite created with svgsprit.es (https://svgsprit.es)',
+  tags: ['svg', 'svg-sprite', 'svgson', 'svg-spreact'],
+  editors: '1100',
 }
