@@ -64,7 +64,7 @@ export default function Home() {
       tidy,
       optimize,
       names,
-      // className: cname.current?.value,
+      className: inputRef.current?.value,
     }
 
     try {
